@@ -10,82 +10,63 @@ import {
 import { Constants } from 'expo';
 import * as firebase from 'firebase';
 
-const config = {
-  
+var config = {
+  apiKey: 'AIzaSyDluonuaPcLFWSjnA7h8EaRCKxZnUHJ19g',
+  authDomain: 'foodber-65c10.firebaseapp.com',
+  databaseURL: 'https://foodber-65c10.firebaseio.com',
+  projectId: 'foodber-65c10',
+  storageBucket: 'foodber-65c10.appspot.com',
+  messagingSenderId: '669394895252',
 };
 firebase.initializeApp(config);
 
 export default class HomeScreen extends React.Component {
   constructor() {
-    super()
+    super();
     this.state = {
-      name: "KCho",
+      name: 'Place Order: ',
       cart: '',
       orders: [],
-    }
-    this.addItem = this.addItem.bind(this)
+    };
+    this.addItem = this.addItem.bind(this);
   }
   static navigationOptions = {
-    header: null,
+    title: 'Order Page',
+    style: {
+      backgroundColor: 'blue',
+    },
   };
-
-  componentDidMount() {
-    //this is going to ref our firebase JUST ONCE when component mounts
-    //it is going to look under orders for all the children and we can access it through snapshot
-    //snapshot.val() will return a object with the key as a random string and value as the orders
-    //we set our orders state with the new array for values in initOrder
-    firebase.database().ref().child('orders').once('value', snapshot => {
-      const data = snapshot.val()
-      if (data) {
-        const initOrder = []
-        Object.keys(data).forEach(order => initOrder.push(data[order]))
-        this.setState({
-          orders: [...initOrder]
-        })
-      }
-    })
-    //this is going to ref our firebase at orders and put a event listener on there
-    //this will trigger everytime a child is added to our orders
-    //if the value in the child being added is valid it will add it to our orders state
-    //which will make our page re-render since state was updated
-    firebase.database().ref().child('orders').on('child_added', snapshot => {
-      const data = snapshot.val()
-      if (data) {
-        this.setState(prevState => ({
-          orders: [...prevState.orders, data]
-        }))
-      }
-    })
-  }
 
   addItem() {
     //this is our onPress button handeler
     //when using push() this will generate the random key for the value
     //set() will add the new data to our data base with the push() key and the value in cart which is what we typed
-    if (!this.state.cart) {return}
-    const newOrderKey = firebase.database().ref().child('orders').push()
+    if (!this.state.cart) {
+      return;
+    }
+    const newOrderKey = firebase
+      .database()
+      .ref()
+      .child('orders')
+      .push();
     newOrderKey.set(this.state.cart, () => {
-      this.setState({cart: ''})
-    })
+      this.setState({ cart: '' });
+    });
   }
 
   render() {
     return (
       <View style={styles.container}>
-          <View style={styles.getStartedContainer}>
-            <Text style={styles.getStartedText}>{this.state.name}</Text>
-            <Text style={styles.getStartedText}>Order: {this.state.cart}</Text>
-            <TextInput style={styles.foodInput} placeholder="Enter The Food You Want" onChangeText={(food) => this.setState({cart: food})} />
-            <Button title="Add" onPress={this.addItem} />
-          </View>
-              {this.state.orders.map(order => {
-                return (
-            <View style={styles.isItWorking} key={order}>
-            <Text>{order}</Text>
-            </View>
-                )
-              }
-          )}
+        <View style={styles.getStartedContainer}>
+          <Text style={styles.getStartedText}>{this.state.name}</Text>
+          {/* <Text style={styles.getStartedText}>Order: {this.state.cart}</Text> */}
+          <TextInput
+            style={styles.foodInput}
+            placeholder="Enter The Food You Want"
+            onChangeText={food => this.setState({ cart: food })}
+          />
+          <Button title="Order" onPress={this.addItem} />
+        </View>
       </View>
     );
   }
@@ -95,14 +76,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginTop: Constants.statusBarHeight
+    marginTop: Constants.statusBarHeight,
   },
   foodInput: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.05)',
-  },
-  isItWorking: {
-    fontSize: 24,
   },
   contentContainer: {
     paddingTop: 30,
@@ -110,7 +88,7 @@ const styles = StyleSheet.create({
   getStartedContainer: {
     flexDirection: 'row',
     padding: 20,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   getStartedText: {
     fontSize: 17,
