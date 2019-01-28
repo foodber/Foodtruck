@@ -2,6 +2,12 @@ import React from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import * as firebase from 'firebase';
 
+const config = {
+
+};
+
+firebase.initializeApp(config);
+
 export default class LinksScreen extends React.Component {
   constructor() {
     super();
