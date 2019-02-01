@@ -1,9 +1,14 @@
-import React from 'react';
-import { ScrollView, StyleSheet, View, Text } from 'react-native';
-import * as firebase from 'firebase';
+import React from "react";
+import { ScrollView, StyleSheet, View, Text } from "react-native";
+import * as firebase from "firebase";
 
 const config = {
-
+  apiKey: "AIzaSyDluonuaPcLFWSjnA7h8EaRCKxZnUHJ19g",
+  authDomain: "foodber-65c10.firebaseapp.com",
+  databaseURL: "https://foodber-65c10.firebaseio.com",
+  projectId: "foodber-65c10",
+  storageBucket: "foodber-65c10.appspot.com",
+  messagingSenderId: "669394895252"
 };
 
 firebase.initializeApp(config);
@@ -12,12 +17,12 @@ export default class LinksScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      orders: [],
+      orders: []
     };
   }
 
   static navigationOptions = {
-    title: 'Online Orders',
+    title: "Online Orders"
   };
 
   componentDidMount() {
@@ -28,14 +33,14 @@ export default class LinksScreen extends React.Component {
     firebase
       .database()
       .ref()
-      .child('orders')
-      .once('value', snapshot => {
+      .child("orders")
+      .once("value", snapshot => {
         const data = snapshot.val();
         if (data) {
           const initOrder = [];
           Object.keys(data).forEach(order => initOrder.push(data[order]));
           this.setState({
-            orders: [...initOrder],
+            orders: [...initOrder]
           });
         }
       });
@@ -46,12 +51,12 @@ export default class LinksScreen extends React.Component {
     firebase
       .database()
       .ref()
-      .child('orders')
-      .on('child_added', snapshot => {
+      .child("orders")
+      .on("child_added", snapshot => {
         const data = snapshot.val();
         if (data) {
           this.setState(prevState => ({
-            orders: [...prevState.orders, data],
+            orders: [...prevState.orders, data]
           }));
         }
       });
@@ -79,15 +84,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff"
   },
   isItWorking: {
-    fontSize: 24,
+    fontSize: 24
   },
   theHeader: {
     fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
+    color: "rgba(96,100,109, 1)",
     lineHeight: 24,
-    textAlign: 'left',
-  },
+    textAlign: "left"
+  }
 });
