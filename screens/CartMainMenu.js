@@ -1,74 +1,51 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
-import * as firebase from 'firebase';
+import { connect } from 'react-redux';
+import { fetchAllOrders } from '../store/Reducer';
+import fire from 'firebase';
 
-const config = {
-
-};
-
-firebase.initializeApp(config);
-
-export default class LinksScreen extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      orders: [],
-    };
-  }
+class LinkScreen extends React.Component {
+  // constructor() {
+  //   super();
+  //   this.state = {
+  //     orders: [],
+  //   };
+  // }
 
   static navigationOptions = {
     title: 'Online Orders',
   };
 
-  componentDidMount() {
-    //this is going to ref our firebase JUST ONCE when component mounts
-    //it is going to look under orders for all the children and we can access it through snapshot
-    //snapshot.val() will return a object with the key as a random string and value as the orders
-    //we set our orders state with the new array for values in initOrder
-    firebase
-      .database()
-      .ref()
-      .child('orders')
-      .once('value', snapshot => {
-        const data = snapshot.val();
-        if (data) {
-          const initOrder = [];
-          Object.keys(data).forEach(order => initOrder.push(data[order]));
-          this.setState({
-            orders: [...initOrder],
-          });
-        }
-      });
-    //this is going to ref our firebase at orders and put a event listener on there
-    //this will trigger everytime a child is added to our orders
-    //if the value in the child being added is valid it will add it to our orders state
-    //which will make our page re-render since state was updated
-    firebase
-      .database()
-      .ref()
-      .child('orders')
-      .on('child_added', snapshot => {
-        const data = snapshot.val();
-        if (data) {
-          this.setState(prevState => ({
-            orders: [...prevState.orders, data],
-          }));
-        }
-      });
+  async componentDidMount() {
+    await this.props.fetchAllOrders();
   }
 
   render() {
+    const allOrders = this.props.allOrders || [];
+    //console.log('test>>>>>>>>>>>>>', allOrders);
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView>
         <Text style={styles.theHeader}>Incoming Orders: </Text>
         <View>
-          {this.state.orders.map(order => {
-            return (
-              <View style={styles.isItWorking} key={order}>
-                <Text>{order}</Text>
-              </View>
-            );
-          })}
+          {allOrders &&
+            allOrders[0] &&
+            allOrders.map(order => {
+              let arr = Object.keys(order);
+              return arr.map(title => {
+                console.log('IAMTITLE', order[title]);
+                let food = Object.keys(order[title]);
+                let quant = Object.values(order[title]);
+                for (let i = 0; i <= food.length; i++) {
+                  return (
+                    <View key={title}>
+                      <Text>{title}</Text>
+                      <Text>{food[i]}</Text>
+                      <Text>{quant[i]}</Text>
+                    </View>
+                  );
+                }
+              });
+            })}
         </View>
       </ScrollView>
     );
@@ -81,6 +58,12 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     backgroundColor: '#fff',
   },
+  padding: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 5,
+    paddingRight: 7,
+  },
   isItWorking: {
     fontSize: 24,
   },
@@ -90,4 +73,25 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     textAlign: 'left',
   },
+  ViewBox: {
+    paddingLeft: 10,
+    // borderRadius: 5,
+    // borderWidth: 1,
+    backgroundColor: '#f5f5f5',
+  },
 });
+
+const mapStateToProps = state => ({
+  allOrders: state.allOrders.allOrders,
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchAllOrders: () => {
+    dispatch(fetchAllOrders());
+  },
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LinkScreen);
