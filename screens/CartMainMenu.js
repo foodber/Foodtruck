@@ -1,17 +1,7 @@
 import React from "react";
 import { ScrollView, StyleSheet, View, Text } from "react-native";
-import * as firebase from "firebase";
-
-const config = {
-  apiKey: "AIzaSyDluonuaPcLFWSjnA7h8EaRCKxZnUHJ19g",
-  authDomain: "foodber-65c10.firebaseapp.com",
-  databaseURL: "https://foodber-65c10.firebaseio.com",
-  projectId: "foodber-65c10",
-  storageBucket: "foodber-65c10.appspot.com",
-  messagingSenderId: "669394895252"
-};
-
-firebase.initializeApp(config);
+import { firebase } from "../db/fire";
+require("firebase/auth");
 
 export default class LinksScreen extends React.Component {
   constructor() {
@@ -26,10 +16,6 @@ export default class LinksScreen extends React.Component {
   };
 
   componentDidMount() {
-    //this is going to ref our firebase JUST ONCE when component mounts
-    //it is going to look under orders for all the children and we can access it through snapshot
-    //snapshot.val() will return a object with the key as a random string and value as the orders
-    //we set our orders state with the new array for values in initOrder
     firebase
       .database()
       .ref()

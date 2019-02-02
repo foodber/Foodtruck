@@ -3,7 +3,7 @@ import { Platform, StatusBar, StyleSheet, View } from "react-native";
 import { AppLoading, Asset, Font, Icon } from "expo";
 import AppNavigator from "./navigation/AppNavigator";
 import Login from "./screens/Login";
-import firebase from "firebase";
+import { firebase, allTrucks } from "./db/fire";
 require("firebase/auth");
 
 export default class App extends React.Component {
@@ -20,6 +20,9 @@ export default class App extends React.Component {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({ user });
+        allTrucks
+          .doc(this.state.user.uid)
+          .set({ email: this.state.user.email });
       } else {
         this.setState({ user: null });
       }

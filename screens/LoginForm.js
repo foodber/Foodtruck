@@ -21,7 +21,7 @@ export default class LoginForm extends Component {
     this.signup = this.signup.bind(this);
   }
 
-  login(event) {
+  login() {
     fire
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.password)
