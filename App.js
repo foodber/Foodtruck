@@ -22,7 +22,7 @@ export default class App extends React.Component {
         this.setState({ user });
         allTrucks
           .doc(this.state.user.uid)
-          .set({ email: this.state.user.email });
+          .set({ email: this.state.user.email, menu: [] });
       } else {
         this.setState({ user: null });
       }
