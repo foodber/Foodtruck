@@ -6,16 +6,30 @@ import {
 } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import NotbeingUsed from '../screens/NotbeingUsed';
-import CartMainMenu from '../screens/CartMainMenu';
-import SettingsScreen from '../screens/SettingsScreen';
+import cartOrderPage from '../screens/cartOrderPage';
+import mapPage from '../screens/mapPage';
+import menuPage from '../screens/menuPage';
 
-const MainMenuStack = createStackNavigator({
-  Home: NotbeingUsed,
+const CartMainPage = createStackNavigator({
+  Links: cartOrderPage,
 });
 
-MainMenuStack.navigationOptions = {
-  tabBarLabel: 'Main',
+CartMainPage.navigationOptions = {
+  tabBarLabel: 'Orders',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+    />
+  ),
+};
+
+const MapPage = createStackNavigator({
+  Home: mapPage,
+});
+
+MapPage.navigationOptions = {
+  tabBarLabel: 'Map',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -28,26 +42,12 @@ MainMenuStack.navigationOptions = {
   ),
 };
 
-const LinksStack = createStackNavigator({
-  Links: CartMainMenu,
+const MenuPage = createStackNavigator({
+  Settings: menuPage,
 });
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Orders',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
-    />
-  ),
-};
-
-const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen,
-});
-
-SettingsStack.navigationOptions = {
-  tabBarLabel: 'Test',
+MenuPage.navigationOptions = {
+  tabBarLabel: 'Menu',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -57,7 +57,7 @@ SettingsStack.navigationOptions = {
 };
 
 export default createBottomTabNavigator({
-  //MainMenuStack,
-  LinksStack,
-  SettingsStack,
+  CartMainPage,
+  MapPage,
+  MenuPage,
 });
