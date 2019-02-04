@@ -5,13 +5,6 @@ import { fetchAllOrders } from '../store/Reducer';
 import fire from 'firebase';
 
 class LinkScreen extends React.Component {
-  // constructor() {
-  //   super();
-  //   this.state = {
-  //     orders: [],
-  //   };
-  // }
-
   static navigationOptions = {
     title: 'Online Orders',
   };
@@ -22,41 +15,9 @@ class LinkScreen extends React.Component {
 
   render() {
     const allOrders = this.props.allOrders || [];
-    //console.log('test>>>>>>>>>>>>>', allOrders);
     return (
       <ScrollView>
         <Text style={styles.theHeader}>Incoming Orders: </Text>
-        {/* <View>
-          {allOrders &&
-            allOrders[0] &&
-            allOrders.map(order => {
-              let arr = Object.keys(order);
-              return arr.map(title => {
-                //let test = Object.entries(order);
-                //console.log('IAMTITLE', test);
-                //console.log('TESTING', Object.keys(test[0])[0]);
-
-                // return (
-                //   <View key={title}>
-                //     <Text>{title}</Text>
-                //   </View>
-                // );
-
-                let food = Object.keys(order[title]);
-                console.log('FOD', food);
-                let quant = Object.values(order[title]);
-                for (let i = 0; i <= food.length; i++) {
-                  return (
-                    <View key={title}>
-                      <Text>{title}</Text>
-                      <Text>{food[i]}</Text>
-                      <Text>{quant[i]}</Text>
-                    </View>
-                  );
-                }
-              });
-            })}
-        </View> */}
       </ScrollView>
     );
   }
@@ -85,8 +46,6 @@ const styles = StyleSheet.create({
   },
   ViewBox: {
     paddingLeft: 10,
-    // borderRadius: 5,
-    // borderWidth: 1,
     backgroundColor: '#f5f5f5',
   },
 });
