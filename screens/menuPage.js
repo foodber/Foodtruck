@@ -12,6 +12,7 @@ import {
 import { connect } from 'react-redux';
 import { getMenuForTruck } from '../store/Reducer';
 import db from '../db/fire';
+import fire from 'firebase';
 
 export default class SettingsScreen extends React.Component {
   static navigationOptions = {
@@ -22,6 +23,10 @@ export default class SettingsScreen extends React.Component {
     Alert.alert('Added');
   }
 
+  logout() {
+    fire.auth().signOut();
+  }
+
   componentDidMount() {}
 
   render() {
@@ -29,7 +34,7 @@ export default class SettingsScreen extends React.Component {
       <View>
         <Text>Hello World</Text>
         <TextInput title="Add a Dish" editable={true} />
-        <Button title="Add" onPress={this.message} />
+        <Button title="logout" onPress={this.logout} />
       </View>
     );
   }

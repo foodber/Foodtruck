@@ -3,7 +3,9 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import Login from './screens/Login';
+import store from './store';
 import { firebase, allTrucks } from './db/fire';
+import { Provider } from 'react-redux';
 require('firebase/auth');
 
 console.disableYellowBox = true;
@@ -48,10 +50,12 @@ export default class App extends React.Component {
         //     <AppNavigator />
         //   </View>
         // </Provider>
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          {this.state.user ? <AppNavigator /> : <Login />}
-        </View>
+        <Provider store={store}>
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            {this.state.user ? <AppNavigator /> : <Login />}
+          </View>
+        </Provider>
       );
     }
   }
