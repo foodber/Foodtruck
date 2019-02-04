@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 import {
   Platform,
   StyleSheet,
   Text,
   View,
   Button,
-  TextInput,
-} from 'react-native';
-import { Constants } from 'expo';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+  TextInput
+} from "react-native";
+import { Constants } from "expo";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
 export default class CartMainMenu extends React.Component {
   constructor(props) {
@@ -17,19 +17,18 @@ export default class CartMainMenu extends React.Component {
     this.state = {
       latitude: null,
       longitude: null,
-      error: null,
+      error: null
     };
   }
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       position => {
-        console.log('wokeeey');
-        console.log(position);
+        console.log("LAT/LONG>>>>>>>>>>>>>", position);
         this.setState({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          error: null,
+          error: null
         });
       },
       error => this.setState({ error: error.message }),
@@ -55,13 +54,13 @@ export default class CartMainMenu extends React.Component {
               latitude: this.state.latitude,
               longitude: this.state.longitude,
               latitudeDelta: 0.03,
-              longitudeDelta: 0.03,
+              longitudeDelta: 0.03
             }}
           >
             <MapView.Marker
               coordinate={{
                 latitude: this.state.latitude,
-                longitude: this.state.longitude,
+                longitude: this.state.longitude
               }}
               title="Current Location"
               //description="Some description"
@@ -84,10 +83,10 @@ export default class CartMainMenu extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: "#ecf0f1"
   },
-  map: { alignSelf: 'stretch', height: 350 },
+  map: { alignSelf: "stretch", height: 350 }
 });
