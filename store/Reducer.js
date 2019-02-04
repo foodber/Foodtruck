@@ -16,22 +16,11 @@ const getOrders = allOrders => {
   };
 };
 
-// const getMenuForTruck = truckMenu => {
-//   return {
-//     type: GET_TRUCK_MENU,
-//     truckMenu,
-//   };
-// };
-
 export const fetchAllOrders = () => {
   return async dispatch => {
     try {
       const orderList = [];
       const orders = await allOrders.doc('First trucks').get(); //allOrders.doc(with specific truck Key)
-      //   orders.forEach(anOrder => {
-      //     orderList.push(anOrder.data());
-      //   });
-      //console.log('this one >>>>>>>>', orders.data());
       dispatch(getOrders(orders.data()));
     } catch (error) {
       console.error(error);
