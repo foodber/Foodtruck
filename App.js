@@ -2,15 +2,36 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+import Login from './screens/Login';
+import store from './store';
+import { firebase, allTrucks } from './db/fire';
 import { Provider } from 'react-redux';
-import store from './store/index';
+require('firebase/auth');
 
 console.disableYellowBox = true;
 
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
+    user: {},
   };
+
+  componentDidMount() {
+    this.authListener();
+  }
+
+  authListener() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({ user });
+        allTrucks
+          .doc(this.state.user.uid)
+          .set({ email: this.state.user.email, menu: [] });
+      } else {
+        this.setState({ user: null });
+      }
+    });
+  }
 
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
@@ -23,10 +44,16 @@ export default class App extends React.Component {
       );
     } else {
       return (
+        // <Provider store={store}>
+        //   <View style={styles.container}>
+        //     {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+        //     <AppNavigator />
+        //   </View>
+        // </Provider>
         <Provider store={store}>
           <View style={styles.container}>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            <AppNavigator />
+            {this.state.user ? <AppNavigator /> : <Login />}
           </View>
         </Provider>
       );
