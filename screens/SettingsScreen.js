@@ -9,48 +9,118 @@ import {
   TextInput,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { getMenuForTruck } from '../store/Reducer';
-import db from '../db/fire';
+import { fetchTruck} from '../store/Reducer';
+import { allTrucks } from '../db/fire'
 
-export default class SettingsScreen extends React.Component {
+class SettingsScreen extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      menu: [],
+      itemName: '',
+      itemPrice: ''
+    }
+    this.removeItemFromMenu = this.removeItemFromMenu.bind(this)
+    this.addItemToMenu = this.addItemToMenu.bind(this)
+  }
   static navigationOptions = {
-    title: 'World',
+    title: 'Edit Menu',
   };
 
-  componentDidMount() {
-    // db.collection('menu').add({
-    //   email: 'truck' * Math.floor(Math.random() * 99) + '@truckytruck.com',
-    //   pass: ';lasdkfjn;lksadfn',
-    //   name: 'truck' * Math.floor(Math.random() * 99),
-    //   menu: [
-    //     {
-    //       name: 'Potato',
-    //       price: 12.1,
-    //     },
-    //   ],
-    // });
+  async componentDidMount() {
+    // await this.props.fetchTruck('3H9auvKIacpVaD1nPvOD')
+    let data = await allTrucks.doc('3H9auvKIacpVaD1nPvOD').get()
+    let truckData = data.data()
+    this.setState({
+      menu: truckData.menu
+    })
+  }
+
+  async removeItemFromMenu (itemName) {
+    let currentMenu = this.state.menu
+    let newMenu = currentMenu.filter(item => {
+      return item.name !== itemName
+    })
+    this.setState({
+      menu: newMenu
+    })
+    await allTrucks.doc('3H9auvKIacpVaD1nPvOD').update({
+      menu: newMenu
+    })
+  }
+
+  async addItemToMenu (itemName, itemPrice) {
+    if (this.state.itemName.length === 0) {
+      alert("Please enter a product name")
+    } else if (this.state.itemPrice.length === 0) {
+      alert("Please enter the products price")
+    } else {
+      await allTrucks.doc('3H9auvKIacpVaD1nPvOD').update({
+        menu: [...this.state.menu, {name: itemName, price: itemPrice}]
+      })
+      this.setState({
+        menu: [...this.state.menu, {name: itemName, price: itemPrice}],
+        itemName: '',
+        itemPrice: ''
+      })
+    }
   }
 
   render() {
-    /* Go ahead and delete ExpoConfigView and replace it with your
-     * content, we just wanted to give you a quick view of your config */
+    const truckMenu = this.state.menu || []
+    console.log('IAMMENU', this.state)
     return (
-      <View>
-        <Text>Hello World</Text>
-        <TextInput title="Add a Dish" editable={true} />
-        <Button title="Add" />
-      </View>
+     <ScrollView>
+      <TextInput
+        placeholder="Please Enter Item Name"
+        onChangeText={text => {
+          this.setState({
+            itemName: text
+          })
+        }}
+        value={this.state.itemName}
+       />
+       <TextInput
+        placeholder="Please Enter Item Price"
+        keyboardType="numeric"
+        value={this.state.itemPrice}
+        maxLength={7}
+        onChangeText={text => {
+          this.setState({
+            itemPrice: text
+          })
+        }}
+       />
+       <Button title="ADD ITEM TO MENU" onPress={() => this.addItemToMenu(this.state.itemName, this.state.itemPrice)} />
+       <View>
+         {truckMenu && truckMenu[0] &&
+          truckMenu.map(menuItem => {
+            return (
+              <View key={menuItem.name}>
+              <Text>Item Name : {menuItem.name}</Text>
+              <Text>Item Price : {menuItem.price}</Text>
+              <Button title="REMOVE ITEM FROM MENU" onPress={() => this.removeItemFromMenu(menuItem.name)} />
+              </View>
+            )
+          })
+        }
+       </View>
+     </ScrollView>
     );
   }
 }
 
-// const mapDispatchToProps = dispatch => ({
-//   getMenuForTruck: truckMenu => {
-//     dispatch(getMenuForTruck(truckMenu));
-//   },
-// });
+const mapStateToProps = state => ({
+  truck: state.truckMenu.truckMenu
+})
 
-// export default connect(
-//   null,
-//   mapDispatchToProps
-// )(SettingsScreen);
+const mapDispatchToProps = dispatch => ({
+  fetchTruck: truckId => {
+    dispatch(fetchTruck(truckId));
+  },
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SettingsScreen);

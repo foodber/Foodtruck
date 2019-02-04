@@ -3,9 +3,11 @@ import { createLogger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import allOrders from './Reducer';
+import truckMenu from './Reducer'
 
 const reducer = combineReducers({
   allOrders: allOrders,
+  truckMenu: truckMenu
 });
 
 const middleware = composeWithDevTools(

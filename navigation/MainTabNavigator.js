@@ -47,7 +47,7 @@ const SettingsStack = createStackNavigator({
 });
 
 SettingsStack.navigationOptions = {
-  tabBarLabel: 'Test',
+  tabBarLabel: 'Edit Menu',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}

@@ -2,49 +2,54 @@ import React from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchAllOrders } from '../store/Reducer';
-import fire from 'firebase';
+import { allOrders } from '../db/fire'
 
 class LinkScreen extends React.Component {
-  // constructor() {
-  //   super();
-  //   this.state = {
-  //     orders: [],
-  //   };
-  // }
+  constructor() {
+    super();
+    this.state = {
+      orders: [],
+    };
+  }
 
   static navigationOptions = {
     title: 'Online Orders',
   };
 
   async componentDidMount() {
-    await this.props.fetchAllOrders();
+    // await this.props.fetchAllOrders();
+    const orders = await allOrders.doc('First trucks').get();
+    const orderData = orders.data()
+    let newOrdersData = Object.entries(orderData)
+    this.setState({
+      orders: newOrdersData
+    })
   }
 
   render() {
-    const allOrders = this.props.allOrders || [];
-    //console.log('test>>>>>>>>>>>>>', allOrders);
+    // const allOrders = this.props.allOrders || [];
+    const truckOrders = this.state.orders || []
     return (
       <ScrollView>
         <Text style={styles.theHeader}>Incoming Orders: </Text>
         <View>
-          {allOrders &&
-            allOrders[0] &&
-            allOrders.map(order => {
-              let arr = Object.keys(order);
-              return arr.map(title => {
-                console.log('IAMTITLE', order[title]);
-                let food = Object.keys(order[title]);
-                let quant = Object.values(order[title]);
-                for (let i = 0; i <= food.length; i++) {
-                  return (
-                    <View key={title}>
-                      <Text>{title}</Text>
-                      <Text>{food[i]}</Text>
-                      <Text>{quant[i]}</Text>
-                    </View>
-                  );
-                }
-              });
+          {truckOrders &&
+            truckOrders[0] &&
+            truckOrders.map(order => {
+              let eachOrder = Object.entries(order[1])
+              return (
+                <View key={order[1]}>
+                  <Text>Ordered Person's Name : {order[0]}</Text>
+                  {eachOrder.map(singleOrder => {
+                    return (
+                      <View key={singleOrder[0]}>
+                        <Text>Ordered Item : {singleOrder[0]}</Text>
+                        <Text>Ordered Quantity : {singleOrder[1]}</Text>
+                      </View>
+                    )
+                  })}
+                </View>
+              )
             })}
         </View>
       </ScrollView>
