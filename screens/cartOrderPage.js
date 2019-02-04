@@ -24,6 +24,13 @@ class LinkScreen extends React.Component {
     this.setState({
       orders: newOrdersData
     })
+    await allOrders.doc('First trucks').onSnapshot(doc => {
+      const newOrders = doc.data()
+      const testing = Object.entries(newOrders)
+      this.setState({
+        orders: testing
+      })
+    })
   }
 
   render() {
@@ -35,14 +42,14 @@ class LinkScreen extends React.Component {
         <View>
           {truckOrders &&
             truckOrders[0] &&
-            truckOrders.map(order => {
+            truckOrders.map((order, index) => {
               let eachOrder = Object.entries(order[1])
               return (
-                <View key={order[1]}>
+                <View key={index}>
                   <Text>Ordered Person's Name : {order[0]}</Text>
-                  {eachOrder.map(singleOrder => {
+                  {eachOrder.map((singleOrder, index) => {
                     return (
-                      <View key={singleOrder[0]}>
+                      <View key={index}>
                         <Text>Ordered Item : {singleOrder[0]}</Text>
                         <Text>Ordered Quantity : {singleOrder[1]}</Text>
                       </View>

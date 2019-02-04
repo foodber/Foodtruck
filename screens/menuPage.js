@@ -68,7 +68,6 @@ class SettingsScreen extends React.Component {
 
   render() {
     const truckMenu = this.state.menu || []
-    console.log('IAMMENU', this.state)
     return (
      <ScrollView>
       <TextInput

@@ -9,6 +9,9 @@ import {
 } from 'react-native';
 import { Constants } from 'expo';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { truckLocation } from '../db/fire'
+import firebase from 'firebase'
+require("firebase/auth");
 
 export default class CartMainMenu extends React.Component {
   constructor(props) {
@@ -18,23 +21,34 @@ export default class CartMainMenu extends React.Component {
       latitude: null,
       longitude: null,
       error: null,
+      truckKey: ''
     };
+    this.updateLocation = this.updateLocation.bind(this)
   }
 
-  componentDidMount() {
-    navigator.geolocation.getCurrentPosition(
+  async componentDidMount() {
+    let truckKey = await firebase.auth().currentUser
+    await navigator.geolocation.getCurrentPosition(
       position => {
-        console.log('wokeeey');
-        console.log(position);
         this.setState({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           error: null,
+          truckKey: truckKey.uid
         });
       },
       error => this.setState({ error: error.message }),
       { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 }
-    );
+      );
+    }
+    
+    async updateLocation() {
+      await truckLocation.doc(this.state.truckKey).set({
+        location: {
+        Lat: this.state.latitude,
+        Long: this.state.longitude
+      }
+    })
   }
 
   render() {
@@ -49,6 +63,7 @@ export default class CartMainMenu extends React.Component {
       <View style={styles.container}>
         {this.state.latitude && this.state.longitude && (
           <MapView
+            key={this.state.latitude}
             provider={PROVIDER_GOOGLE}
             style={styles.map}
             initialRegion={{
@@ -68,7 +83,7 @@ export default class CartMainMenu extends React.Component {
             />
           </MapView>
         )}
-        <Button title="Open" />
+        <Button title="Update My Location" onPress={this.updateLocation} />
       </View>
     );
   }
