@@ -24,7 +24,8 @@ export default class CartMainMenu extends React.Component {
       truckKey: '',
       markers: [],
     };
-    this.updateLocation = this.updateLocation.bind(this);
+    this.addLocation = this.addLocation.bind(this);
+    this.removeLocation = this.removeLocation.bind(this);
   }
 
   async componentDidMount() {
@@ -43,7 +44,14 @@ export default class CartMainMenu extends React.Component {
     );
   }
 
-  async updateLocation() {
+  async removeLocation() {
+    this.setState({
+      markers: [],
+    });
+    await truckLocation.doc(this.state.truckKey).delete();
+  }
+
+  async addLocation() {
     await truckLocation.doc(this.state.truckKey).set({
       location: {
         Lat: this.state.latitude,
@@ -89,8 +97,8 @@ export default class CartMainMenu extends React.Component {
             ))}
           </MapView>
         )}
-        <Button title="Update My Location" onPress={this.updateLocation} />
-        <Button title="Remove My Location" onPress={this.updateLocation} />
+        <Button title="Update My Location" onPress={this.addLocation} />
+        <Button title="Remove My Location" onPress={this.removeLocation} />
       </View>
     );
   }
