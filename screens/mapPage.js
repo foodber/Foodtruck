@@ -48,7 +48,9 @@ export default class CartMainMenu extends React.Component {
     this.setState({
       markers: [],
     });
-    await truckLocation.doc(this.state.truckKey).delete();
+    await truckLocation.doc(this.state.truckKey).set({
+      state: 'NY',
+    });
   }
 
   async addLocation() {
@@ -57,6 +59,7 @@ export default class CartMainMenu extends React.Component {
         Lat: this.state.latitude,
         Long: this.state.longitude,
       },
+      state: 'NY',
     });
     await navigator.geolocation.getCurrentPosition(position => {
       this.setState({
