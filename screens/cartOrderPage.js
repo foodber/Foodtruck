@@ -1,8 +1,10 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Text } from 'react-native';
+import { ScrollView, StyleSheet, View, Text, Button } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchAllOrders } from '../store/Reducer';
 import { allOrders } from '../db/fire'
+import fire from "firebase";
+require("firebase/auth");
 
 class LinkScreen extends React.Component {
   constructor() {
@@ -10,6 +12,7 @@ class LinkScreen extends React.Component {
     this.state = {
       orders: [],
     };
+    this.logOut = this.logOut.bind(this)
   }
 
   static navigationOptions = {
@@ -17,20 +20,25 @@ class LinkScreen extends React.Component {
   };
 
   async componentDidMount() {
+    const userId = await fire.auth().currentUser
     // await this.props.fetchAllOrders();
-    const orders = await allOrders.doc('First trucks').get();
+    const orders = await allOrders.doc(userId.email).get();
     const orderData = orders.data()
     let newOrdersData = Object.entries(orderData)
     this.setState({
       orders: newOrdersData
     })
-    await allOrders.doc('First trucks').onSnapshot(doc => {
+    await allOrders.doc(userId.email).onSnapshot(doc => {
       const newOrders = doc.data()
       const testing = Object.entries(newOrders)
       this.setState({
         orders: testing
       })
     })
+  }
+
+  logOut (){
+    fire.auth().signOut()
   }
 
   render() {
@@ -58,6 +66,7 @@ class LinkScreen extends React.Component {
                 </View>
               )
             })}
+            <Button title="Signout" onPress={this.logOut} />
         </View>
       </ScrollView>
     );

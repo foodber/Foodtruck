@@ -11,6 +11,8 @@ import {
 import { connect } from 'react-redux';
 import { fetchTruck} from '../store/Reducer';
 import { allTrucks } from '../db/fire'
+import fire from "firebase";
+require("firebase/auth");
 
 class SettingsScreen extends React.Component {
   constructor() {
@@ -18,7 +20,8 @@ class SettingsScreen extends React.Component {
     this.state = {
       menu: [],
       itemName: '',
-      itemPrice: ''
+      itemPrice: '',
+      truckId: '',
     }
     this.removeItemFromMenu = this.removeItemFromMenu.bind(this)
     this.addItemToMenu = this.addItemToMenu.bind(this)
@@ -28,11 +31,12 @@ class SettingsScreen extends React.Component {
   };
 
   async componentDidMount() {
-    // await this.props.fetchTruck('3H9auvKIacpVaD1nPvOD')
-    let data = await allTrucks.doc('3H9auvKIacpVaD1nPvOD').get()
+    const truckId = await fire.auth().currentUser
+    let data = await allTrucks.doc(truckId.uid).get()
     let truckData = data.data()
     this.setState({
-      menu: truckData.menu
+      menu: truckData.menu,
+      truckId
     })
   }
 
@@ -41,11 +45,13 @@ class SettingsScreen extends React.Component {
     let newMenu = currentMenu.filter(item => {
       return item.name !== itemName
     })
-    this.setState({
+    await this.setState({
       menu: newMenu
     })
-    await allTrucks.doc('3H9auvKIacpVaD1nPvOD').update({
-      menu: newMenu
+    await allTrucks.doc(this.state.truckId.uid).set({
+      name: this.state.truckId.providerData[0].email,
+      email: this.state.truckId.providerData[0].email,
+      menu: this.state.menu
     })
   }
 
@@ -55,7 +61,9 @@ class SettingsScreen extends React.Component {
     } else if (this.state.itemPrice.length === 0) {
       alert("Please enter the products price")
     } else {
-      await allTrucks.doc('3H9auvKIacpVaD1nPvOD').update({
+      await allTrucks.doc(this.state.truckId.uid).set({
+        name: this.state.truckId.providerData[0].email,
+        email: this.state.truckId.providerData[0].email,
         menu: [...this.state.menu, {name: itemName, price: itemPrice}]
       })
       this.setState({
