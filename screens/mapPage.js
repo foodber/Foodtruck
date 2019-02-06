@@ -1,17 +1,9 @@
 import React from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TextInput,
-} from 'react-native';
-import { Constants } from 'expo';
+import { StyleSheet, View, Button } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { truckLocation } from '../db/fire'
-import firebase from 'firebase'
-require("firebase/auth");
+import { truckLocation } from '../db/fire';
+import firebase from 'firebase';
+require('firebase/auth');
 
 export default class CartMainMenu extends React.Component {
   constructor(props) {
@@ -21,44 +13,57 @@ export default class CartMainMenu extends React.Component {
       latitude: null,
       longitude: null,
       error: null,
-      truckKey: ''
+      truckKey: '',
+      markers: [],
     };
-    this.updateLocation = this.updateLocation.bind(this)
+    this.addLocation = this.addLocation.bind(this);
+    this.removeLocation = this.removeLocation.bind(this);
   }
 
   async componentDidMount() {
-    let truckKey = await firebase.auth().currentUser
+    let truckKey = await firebase.auth().currentUser;
     await navigator.geolocation.getCurrentPosition(
       position => {
         this.setState({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           error: null,
-          truckKey: truckKey.uid
+          truckKey: truckKey.uid,
         });
       },
       error => this.setState({ error: error.message }),
-      { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 }
-      );
-    }
-    
-    async updateLocation() {
-      await truckLocation.doc(this.state.truckKey).set({
-        location: {
+      { enableHighAccuracy: false, timeout: 100000, maximumAge: 0 }
+    );
+  }
+
+  async removeLocation() {
+    this.setState({
+      markers: [],
+    });
+    await truckLocation.doc(this.state.truckKey).delete();
+  }
+
+  async addLocation() {
+    await truckLocation.doc(this.state.truckKey).set({
+      location: {
         Lat: this.state.latitude,
-        Long: this.state.longitude
-      }
-    })
+        Long: this.state.longitude,
+      },
+      state: 'NY',
+    });
+    await navigator.geolocation.getCurrentPosition(position => {
+      this.setState({
+        markers: [
+          {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          },
+        ],
+      });
+    });
   }
 
   render() {
-    // let lat = 40.70513;
-    // let long = -74.009378;
-    // if (this.state.longitude && this.state.latitude) {
-    //   lat = this.state.latitude;
-    //   long = this.state.longitude;
-    // }
-
     return (
       <View style={styles.container}>
         {this.state.latitude && this.state.longitude && (
@@ -66,43 +71,41 @@ export default class CartMainMenu extends React.Component {
             key={this.state.latitude}
             provider={PROVIDER_GOOGLE}
             style={styles.map}
+            showsUserLocation={true}
             initialRegion={{
               latitude: this.state.latitude,
               longitude: this.state.longitude,
-              latitudeDelta: 0.03,
-              longitudeDelta: 0.03,
+              longitudeDelta: 0.00299,
+              latitudeDelta: 0.00299,
             }}
           >
-            <MapView.Marker
-              coordinate={{
-                latitude: this.state.latitude,
-                longitude: this.state.longitude,
-              }}
-              title="Current Location"
-              //description="Some description"
-            />
+            {this.state.markers.map(marker => (
+              <MapView.Marker
+                key={marker}
+                coordinate={{
+                  latitude: this.state.latitude,
+                  longitude: this.state.longitude,
+                }}
+              />
+            ))}
           </MapView>
         )}
-        <Button title="Update My Location" onPress={this.updateLocation} />
+        <Button title="Open" onPress={this.addLocation} />
+        <Button title="Closed" onPress={this.removeLocation} />
       </View>
     );
   }
 }
 
-// getMapRegion = () => ({
-//   latitude: this.state.latitude,
-//   longitude: this.state.longitude,
-//   latitudeDelta: LATITUDE_DELTA,
-//   longitudeDelta: LONGITUDE_DELTA,
-// });
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
   },
-  map: { alignSelf: 'stretch', height: 350 },
+  map: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 70 },
 });

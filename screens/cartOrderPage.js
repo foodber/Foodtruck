@@ -1,8 +1,9 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Text } from 'react-native';
+import { ScrollView, StyleSheet, View, Text, Button } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchAllOrders } from '../store/Reducer';
-import { allOrders } from '../db/fire'
+import { allOrders } from '../db/fire';
+import firebase from 'firebase';
 
 class LinkScreen extends React.Component {
   constructor() {
@@ -17,25 +18,27 @@ class LinkScreen extends React.Component {
   };
 
   async componentDidMount() {
-    // await this.props.fetchAllOrders();
     const orders = await allOrders.doc('First trucks').get();
-    const orderData = orders.data()
-    let newOrdersData = Object.entries(orderData)
+    const orderData = orders.data();
+    let newOrdersData = Object.entries(orderData);
     this.setState({
-      orders: newOrdersData
-    })
+      orders: newOrdersData,
+    });
     await allOrders.doc('First trucks').onSnapshot(doc => {
-      const newOrders = doc.data()
-      const testing = Object.entries(newOrders)
+      const newOrders = doc.data();
+      const testing = Object.entries(newOrders);
       this.setState({
-        orders: testing
-      })
-    })
+        orders: testing,
+      });
+    });
+  }
+
+  logout() {
+    firebase.auth().signOut();
   }
 
   render() {
-    // const allOrders = this.props.allOrders || [];
-    const truckOrders = this.state.orders || []
+    const truckOrders = this.state.orders || [];
     return (
       <ScrollView>
         <Text style={styles.theHeader}>Incoming Orders: </Text>
@@ -43,7 +46,7 @@ class LinkScreen extends React.Component {
           {truckOrders &&
             truckOrders[0] &&
             truckOrders.map((order, index) => {
-              let eachOrder = Object.entries(order[1])
+              let eachOrder = Object.entries(order[1]);
               return (
                 <View key={index}>
                   <Text>Ordered Person's Name : {order[0]}</Text>
@@ -53,12 +56,13 @@ class LinkScreen extends React.Component {
                         <Text>Ordered Item : {singleOrder[0]}</Text>
                         <Text>Ordered Quantity : {singleOrder[1]}</Text>
                       </View>
-                    )
+                    );
                   })}
                 </View>
-              )
+              );
             })}
         </View>
+        <Button color="#d6301" title="LOGOUT" onPress={this.logout} />
       </ScrollView>
     );
   }
