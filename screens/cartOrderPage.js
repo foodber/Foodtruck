@@ -38,7 +38,7 @@ class LinkScreen extends React.Component {
   }
 
   logout() {
-    firebase.auth().signOut();
+    fire.auth().signOut();
   }
 
   logOut (){
