@@ -16,7 +16,7 @@ require("firebase/auth");
 
 class SettingsScreen extends React.Component {
   constructor() {
-    super()
+    super();
     this.state = {
       menu: [],
       itemName: '',
@@ -40,8 +40,8 @@ class SettingsScreen extends React.Component {
     })
   }
 
-  async removeItemFromMenu (itemName) {
-    let currentMenu = this.state.menu
+  async removeItemFromMenu(itemName) {
+    let currentMenu = this.state.menu;
     let newMenu = currentMenu.filter(item => {
       return item.name !== itemName
     })
@@ -55,11 +55,11 @@ class SettingsScreen extends React.Component {
     })
   }
 
-  async addItemToMenu (itemName, itemPrice) {
+  async addItemToMenu(itemName, itemPrice) {
     if (this.state.itemName.length === 0) {
-      alert("Please enter a product name")
+      alert('Please enter a product name');
     } else if (this.state.itemPrice.length === 0) {
-      alert("Please enter the products price")
+      alert('Please enter the products price');
     } else {
       await allTrucks.doc(this.state.truckId.uid).set({
         name: this.state.truckId.providerData[0].email,
@@ -67,59 +67,67 @@ class SettingsScreen extends React.Component {
         menu: [...this.state.menu, {name: itemName, price: itemPrice}]
       })
       this.setState({
-        menu: [...this.state.menu, {name: itemName, price: itemPrice}],
+        menu: [...this.state.menu, { name: itemName, price: itemPrice }],
         itemName: '',
-        itemPrice: ''
-      })
+        itemPrice: '',
+      });
     }
   }
 
   render() {
-    const truckMenu = this.state.menu || []
+    const truckMenu = this.state.menu || [];
     return (
-     <ScrollView>
-      <TextInput
-        placeholder="Please Enter Item Name"
-        onChangeText={text => {
-          this.setState({
-            itemName: text
-          })
-        }}
-        value={this.state.itemName}
-       />
-       <TextInput
-        placeholder="Please Enter Item Price"
-        keyboardType="numeric"
-        value={this.state.itemPrice}
-        maxLength={7}
-        onChangeText={text => {
-          this.setState({
-            itemPrice: text
-          })
-        }}
-       />
-       <Button title="ADD ITEM TO MENU" onPress={() => this.addItemToMenu(this.state.itemName, this.state.itemPrice)} />
-       <View>
-         {truckMenu && truckMenu[0] &&
-          truckMenu.map(menuItem => {
-            return (
-              <View key={menuItem.name}>
-              <Text>Item Name : {menuItem.name}</Text>
-              <Text>Item Price : {menuItem.price}</Text>
-              <Button title="REMOVE ITEM FROM MENU" onPress={() => this.removeItemFromMenu(menuItem.name)} />
-              </View>
-            )
-          })
-        }
-       </View>
-     </ScrollView>
+      <ScrollView>
+        <TextInput
+          placeholder="Please Enter Item Name"
+          onChangeText={text => {
+            this.setState({
+              itemName: text,
+            });
+          }}
+          value={this.state.itemName}
+        />
+        <TextInput
+          placeholder="Please Enter Item Price"
+          keyboardType="numeric"
+          value={this.state.itemPrice}
+          maxLength={7}
+          onChangeText={text => {
+            this.setState({
+              itemPrice: text,
+            });
+          }}
+        />
+        <Button
+          title="ADD ITEM TO MENU"
+          onPress={() =>
+            this.addItemToMenu(this.state.itemName, this.state.itemPrice)
+          }
+        />
+        <View>
+          {truckMenu &&
+            truckMenu[0] &&
+            truckMenu.map(menuItem => {
+              return (
+                <View key={menuItem.name}>
+                  <Text>Item Name : {menuItem.name}</Text>
+                  <Text>Item Price : {menuItem.price}</Text>
+                  <Button
+                    title="REMOVE ITEM FROM MENU"
+                    onPress={() => this.removeItemFromMenu(menuItem.name)}
+                  />
+                </View>
+              );
+            })}
+        </View>
+      </ScrollView>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  truck: state.truckMenu.truckMenu
-})
+  truck: state.truckMenu.truckMenu,
+});
 
 const mapDispatchToProps = dispatch => ({
   fetchTruck: truckId => {

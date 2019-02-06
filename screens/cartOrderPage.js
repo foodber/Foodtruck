@@ -32,9 +32,13 @@ class LinkScreen extends React.Component {
       const newOrders = doc.data()
       const testing = Object.entries(newOrders)
       this.setState({
-        orders: testing
-      })
-    })
+        orders: testing,
+      });
+    });
+  }
+
+  logout() {
+    firebase.auth().signOut();
   }
 
   logOut (){
@@ -42,8 +46,7 @@ class LinkScreen extends React.Component {
   }
 
   render() {
-    // const allOrders = this.props.allOrders || [];
-    const truckOrders = this.state.orders || []
+    const truckOrders = this.state.orders || [];
     return (
       <ScrollView>
         <Text style={styles.theHeader}>Incoming Orders: </Text>
@@ -51,7 +54,7 @@ class LinkScreen extends React.Component {
           {truckOrders &&
             truckOrders[0] &&
             truckOrders.map((order, index) => {
-              let eachOrder = Object.entries(order[1])
+              let eachOrder = Object.entries(order[1]);
               return (
                 <View key={index}>
                   <Text>Ordered Person's Name : {order[0]}</Text>
@@ -61,13 +64,14 @@ class LinkScreen extends React.Component {
                         <Text>Ordered Item : {singleOrder[0]}</Text>
                         <Text>Ordered Quantity : {singleOrder[1]}</Text>
                       </View>
-                    )
+                    );
                   })}
                 </View>
-              )
+              );
             })}
             <Button title="Signout" onPress={this.logOut} />
         </View>
+        <Button color="#d6301" title="LOGOUT" onPress={this.logout} />
       </ScrollView>
     );
   }
