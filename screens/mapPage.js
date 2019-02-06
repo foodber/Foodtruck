@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TextInput,
-} from 'react-native';
-import { Constants } from 'expo';
+import { StyleSheet, View, Button } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { truckLocation } from '../db/fire';
 import firebase from 'firebase';
