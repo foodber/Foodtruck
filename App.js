@@ -20,13 +20,21 @@ export default class App extends React.Component {
     this.authListener();
   }
 
-  authListener() {
-    firebase.auth().onAuthStateChanged(user => {
+  async authListener() {
+    await firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         this.setState({ user });
-        allTrucks
-          .doc(this.state.user.uid)
-          .set({ email: this.state.user.email, menu: [] });
+        const truckData = await allTrucks.doc(this.state.user.uid).get()
+        if (truckData.data() && truckData.data().menu[0]) {
+          const truckMenu = truckData.data().menu
+          await allTrucks.doc(this.state.user.uid).set({
+            name: this.state.user.email, email: this.state.user.email, menu: [...truckMenu]
+          })
+        } else {
+          await allTrucks.doc(this.state.user.uid).set({
+            name: this.state.user.email, email: this.state.user.email, menu: []
+          })
+        }
       } else {
         this.setState({ user: null });
       }
