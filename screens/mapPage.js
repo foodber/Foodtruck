@@ -48,9 +48,7 @@ export default class CartMainMenu extends React.Component {
     this.setState({
       markers: [],
     });
-    await truckLocation.doc(this.state.truckKey).set({
-      state: 'NY',
-    });
+    await truckLocation.doc(this.state.truckKey).delete();
   }
 
   async addLocation() {
@@ -100,8 +98,8 @@ export default class CartMainMenu extends React.Component {
             ))}
           </MapView>
         )}
-        <Button title="Update My Location" onPress={this.addLocation} />
-        <Button title="Remove My Location" onPress={this.removeLocation} />
+        <Button title="Open" onPress={this.addLocation} />
+        <Button title="Closed" onPress={this.removeLocation} />
       </View>
     );
   }
