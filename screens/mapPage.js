@@ -50,6 +50,7 @@ export default class CartMainMenu extends React.Component {
         Long: this.state.longitude,
       },
       state: 'NY',
+      time: firebase.firestore.FieldValue.serverTimestamp(),
     });
     await navigator.geolocation.getCurrentPosition(position => {
       this.setState({
