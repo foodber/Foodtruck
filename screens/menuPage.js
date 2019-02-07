@@ -109,10 +109,11 @@ class SettingsScreen extends React.Component {
             truckMenu[0] &&
             truckMenu.map(menuItem => {
               return (
-                <View key={menuItem.name}>
-                  <Text>Item Name : {menuItem.name}</Text>
-                  <Text>Item Price : {menuItem.price}</Text>
+                <View key={menuItem.name} style={styles.container}>
+                  <Text style={styles.Text}>Item Name : {menuItem.name}</Text>
+                  <Text style={styles.Text}>Item Price : {menuItem.price}</Text>
                   <Button
+                    color={'#d63031'}
                     title="REMOVE ITEM FROM MENU"
                     onPress={() => this.removeItemFromMenu(menuItem.name)}
                   />
@@ -124,6 +125,21 @@ class SettingsScreen extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 15,
+    backgroundColor: '#fff',
+  },
+  Text: {
+    fontWeight: 'bold',
+    fontSize: 17,
+    color: 'rgba(96,100,109, 1)',
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+});
 
 const mapStateToProps = state => ({
   truck: state.truckMenu.truckMenu,
