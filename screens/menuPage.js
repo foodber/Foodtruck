@@ -1,16 +1,16 @@
-import React from 'react';
-import { ExpoConfigView } from '@expo/samples';
+import React from "react";
+import { ExpoConfigView } from "@expo/samples";
 import {
   ScrollView,
   StyleSheet,
   View,
   Text,
   Button,
-  TextInput,
-} from 'react-native';
-import { connect } from 'react-redux';
-import { fetchTruck} from '../store/Reducer';
-import { allTrucks } from '../db/fire'
+  TextInput
+} from "react-native";
+import { connect } from "react-redux";
+import { fetchTruck } from "../store/Reducer";
+import { allTrucks } from "../db/fire";
 import fire from "firebase";
 require("firebase/auth");
 
@@ -19,57 +19,57 @@ class SettingsScreen extends React.Component {
     super();
     this.state = {
       menu: [],
-      itemName: '',
-      itemPrice: '',
-      truckId: '',
-    }
-    this.removeItemFromMenu = this.removeItemFromMenu.bind(this)
-    this.addItemToMenu = this.addItemToMenu.bind(this)
+      itemName: "",
+      itemPrice: "",
+      truckId: ""
+    };
+    this.removeItemFromMenu = this.removeItemFromMenu.bind(this);
+    this.addItemToMenu = this.addItemToMenu.bind(this);
   }
   static navigationOptions = {
-    title: 'Edit Menu',
+    title: "Edit Menu"
   };
 
   async componentDidMount() {
-    const truckId = await fire.auth().currentUser
-    let data = await allTrucks.doc(truckId.uid).get()
-    let truckData = data.data()
+    const truckId = await fire.auth().currentUser;
+    let data = await allTrucks.doc(truckId.uid).get();
+    let truckData = data.data();
     this.setState({
       menu: truckData.menu,
       truckId
-    })
+    });
   }
 
   async removeItemFromMenu(itemName) {
     let currentMenu = this.state.menu;
     let newMenu = currentMenu.filter(item => {
-      return item.name !== itemName
-    })
+      return item.name !== itemName;
+    });
     await this.setState({
       menu: newMenu
-    })
+    });
     await allTrucks.doc(this.state.truckId.uid).set({
       name: this.state.truckId.providerData[0].email,
       email: this.state.truckId.providerData[0].email,
       menu: this.state.menu
-    })
+    });
   }
 
   async addItemToMenu(itemName, itemPrice) {
     if (this.state.itemName.length === 0) {
-      alert('Please enter a product name');
+      alert("Please enter a product name");
     } else if (this.state.itemPrice.length === 0) {
-      alert('Please enter the products price');
+      alert("Please enter the products price");
     } else {
       await allTrucks.doc(this.state.truckId.uid).set({
         name: this.state.truckId.providerData[0].email,
         email: this.state.truckId.providerData[0].email,
-        menu: [...this.state.menu, {name: itemName, price: itemPrice}]
-      })
+        menu: [...this.state.menu, { name: itemName, price: itemPrice }]
+      });
       this.setState({
         menu: [...this.state.menu, { name: itemName, price: itemPrice }],
-        itemName: '',
-        itemPrice: '',
+        itemName: "",
+        itemPrice: ""
       });
     }
   }
@@ -82,7 +82,7 @@ class SettingsScreen extends React.Component {
           placeholder="Please Enter Item Name"
           onChangeText={text => {
             this.setState({
-              itemName: text,
+              itemName: text
             });
           }}
           value={this.state.itemName}
@@ -94,7 +94,7 @@ class SettingsScreen extends React.Component {
           maxLength={7}
           onChangeText={text => {
             this.setState({
-              itemPrice: text,
+              itemPrice: text
             });
           }}
         />
@@ -109,10 +109,11 @@ class SettingsScreen extends React.Component {
             truckMenu[0] &&
             truckMenu.map(menuItem => {
               return (
-                <View key={menuItem.name}>
-                  <Text>Item Name : {menuItem.name}</Text>
-                  <Text>Item Price : {menuItem.price}</Text>
+                <View key={menuItem.name} style={styles.container}>
+                  <Text style={styles.Text}>Item Name : {menuItem.name}</Text>
+                  <Text style={styles.Text}>Item Price : {menuItem.price}</Text>
                   <Button
+                    color={"#d63031"}
                     title="REMOVE ITEM FROM MENU"
                     onPress={() => this.removeItemFromMenu(menuItem.name)}
                   />
@@ -125,14 +126,29 @@ class SettingsScreen extends React.Component {
   }
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 15,
+    backgroundColor: "#fff"
+  },
+  Text: {
+    fontWeight: "bold",
+    fontSize: 17,
+    color: "rgba(96,100,109, 1)",
+    lineHeight: 24,
+    textAlign: "center"
+  }
+});
+
 const mapStateToProps = state => ({
-  truck: state.truckMenu.truckMenu,
+  truck: state.truckMenu.truckMenu
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchTruck: truckId => {
     dispatch(fetchTruck(truckId));
-  },
+  }
 });
 
 export default connect(

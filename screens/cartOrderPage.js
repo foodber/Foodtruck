@@ -13,7 +13,6 @@ class LinkScreen extends React.Component {
       orders: []
     };
     this.register = this.register.bind(this);
-    this.logOut = this.logOut.bind(this);
   }
 
   static navigationOptions = {
@@ -71,10 +70,6 @@ class LinkScreen extends React.Component {
     fire.auth().signOut();
   }
 
-  logOut() {
-    fire.auth().signOut();
-  }
-
   render() {
     const truckOrders = this.state.orders || [];
     return (
@@ -102,9 +97,8 @@ class LinkScreen extends React.Component {
                 </View>
               );
             })}
-          <Button title="Signout" onPress={this.logOut} />
         </View>
-        <Button color="#d6301" title="LOGOUT" onPress={this.logout} />
+        <Button color={"#d63031"} title="LOGOUT" onPress={this.logout} />
       </ScrollView>
     );
   }
@@ -134,8 +128,6 @@ const styles = StyleSheet.create({
   },
   ViewBox: {
     paddingLeft: 10,
-    // borderRadius: 5,
-    // borderWidth: 1,
     backgroundColor: "#f5f5f5"
   },
   individualOrder: {
