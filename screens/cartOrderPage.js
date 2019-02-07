@@ -2,9 +2,9 @@ import React from 'react';
 import { ScrollView, StyleSheet, View, Text, Button } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchAllOrders } from '../store/Reducer';
-import { allOrders } from '../db/fire'
-import fire from "firebase";
-require("firebase/auth");
+import { allOrders } from '../db/fire';
+import fire from 'firebase';
+require('firebase/auth');
 
 class LinkScreen extends React.Component {
   constructor() {
@@ -12,7 +12,7 @@ class LinkScreen extends React.Component {
     this.state = {
       orders: [],
     };
-    this.logOut = this.logOut.bind(this)
+    this.logOut = this.logOut.bind(this);
   }
 
   static navigationOptions = {
@@ -20,17 +20,17 @@ class LinkScreen extends React.Component {
   };
 
   async componentDidMount() {
-    const userId = await fire.auth().currentUser
+    const userId = await fire.auth().currentUser;
     // await this.props.fetchAllOrders();
     const orders = await allOrders.doc(userId.email).get();
-    const orderData = orders.data()
-    let newOrdersData = Object.entries(orderData)
+    const orderData = orders.data();
+    let newOrdersData = Object.entries(orderData);
     this.setState({
-      orders: newOrdersData
-    })
+      orders: newOrdersData,
+    });
     await allOrders.doc(userId.email).onSnapshot(doc => {
-      const newOrders = doc.data()
-      const testing = Object.entries(newOrders)
+      const newOrders = doc.data();
+      const testing = Object.entries(newOrders);
       this.setState({
         orders: testing,
       });
@@ -41,8 +41,8 @@ class LinkScreen extends React.Component {
     fire.auth().signOut();
   }
 
-  logOut (){
-    fire.auth().signOut()
+  logOut() {
+    fire.auth().signOut();
   }
 
   render() {
@@ -69,9 +69,8 @@ class LinkScreen extends React.Component {
                 </View>
               );
             })}
-            <Button title="Signout" onPress={this.logOut} />
         </View>
-        <Button color="#d6301" title="LOGOUT" onPress={this.logout} />
+        <Button title="Signout" onPress={this.logOut} />
       </ScrollView>
     );
   }

@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
   Image,
   Text,
-  KeyboardAvoidingView
-} from "react-native";
-import LoginForm from "./LoginForm";
+  KeyboardAvoidingView,
+} from 'react-native';
+import LoginForm from './LoginForm';
 
 export default class Login extends Component {
   render() {
@@ -15,7 +15,7 @@ export default class Login extends Component {
         <View style={styles.logoContainer}>
           <Image
             style={styles.logo}
-            source={require("../constants/images/minimal-truck.jpg")}
+            source={require('../constants/images/minimal-truck.jpg')}
           />
           <Text style={styles.title}>Foodber</Text>
         </View>
@@ -30,19 +30,19 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#d63031"
+    backgroundColor: '#d63031',
   },
   logoContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     flexGrow: 1,
-    justifyContent: "center"
+    justifyContent: 'center',
   },
   logo: {
     width: 125,
-    height: 125
+    height: 125,
   },
   title: {
-    color: "#FFF",
-    marginTop: 10
-  }
+    color: '#FFF',
+    marginTop: 10,
+  },
 });

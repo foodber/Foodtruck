@@ -9,10 +9,10 @@ import {
   TextInput,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchTruck} from '../store/Reducer';
-import { allTrucks } from '../db/fire'
-import fire from "firebase";
-require("firebase/auth");
+import { fetchTruck } from '../store/Reducer';
+import { allTrucks } from '../db/fire';
+import fire from 'firebase';
+require('firebase/auth');
 
 class SettingsScreen extends React.Component {
   constructor() {
@@ -22,37 +22,37 @@ class SettingsScreen extends React.Component {
       itemName: '',
       itemPrice: '',
       truckId: '',
-    }
-    this.removeItemFromMenu = this.removeItemFromMenu.bind(this)
-    this.addItemToMenu = this.addItemToMenu.bind(this)
+    };
+    this.removeItemFromMenu = this.removeItemFromMenu.bind(this);
+    this.addItemToMenu = this.addItemToMenu.bind(this);
   }
   static navigationOptions = {
     title: 'Edit Menu',
   };
 
   async componentDidMount() {
-    const truckId = await fire.auth().currentUser
-    let data = await allTrucks.doc(truckId.uid).get()
-    let truckData = data.data()
+    const truckId = await fire.auth().currentUser;
+    let data = await allTrucks.doc(truckId.uid).get();
+    let truckData = data.data();
     this.setState({
       menu: truckData.menu,
-      truckId
-    })
+      truckId,
+    });
   }
 
   async removeItemFromMenu(itemName) {
     let currentMenu = this.state.menu;
     let newMenu = currentMenu.filter(item => {
-      return item.name !== itemName
-    })
+      return item.name !== itemName;
+    });
     await this.setState({
-      menu: newMenu
-    })
+      menu: newMenu,
+    });
     await allTrucks.doc(this.state.truckId.uid).set({
       name: this.state.truckId.providerData[0].email,
       email: this.state.truckId.providerData[0].email,
-      menu: this.state.menu
-    })
+      menu: this.state.menu,
+    });
   }
 
   async addItemToMenu(itemName, itemPrice) {
@@ -64,8 +64,8 @@ class SettingsScreen extends React.Component {
       await allTrucks.doc(this.state.truckId.uid).set({
         name: this.state.truckId.providerData[0].email,
         email: this.state.truckId.providerData[0].email,
-        menu: [...this.state.menu, {name: itemName, price: itemPrice}]
-      })
+        menu: [...this.state.menu, { name: itemName, price: itemPrice }],
+      });
       this.setState({
         menu: [...this.state.menu, { name: itemName, price: itemPrice }],
         itemName: '',
