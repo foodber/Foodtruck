@@ -1,13 +1,6 @@
 import React from 'react';
 import { ExpoConfigView } from '@expo/samples';
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  Text,
-  Button,
-  TextInput,
-} from 'react-native';
+import { View, StyleSheet, Text, Button, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchTruck } from '../store/Reducer';
 import { allTrucks } from '../db/fire';
@@ -77,8 +70,8 @@ class SettingsScreen extends React.Component {
   render() {
     const truckMenu = this.state.menu || [];
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <View>
+      <View>
+        <View style={styles.addBox}>
           <Text style={styles.textSize}>New Menu Item</Text>
           <TextInput
             placeholder="Item"
@@ -102,14 +95,15 @@ class SettingsScreen extends React.Component {
             }}
             style={styles.inputPrice}
           />
-          <Button
-            title="ADD"
-            onPress={() =>
-              this.addItemToMenu(this.state.itemName, this.state.itemPrice)
-            }
-          />
         </View>
+        <Button
+          title="ADD"
+          onPress={() =>
+            this.addItemToMenu(this.state.itemName, this.state.itemPrice)
+          }
+        />
         <View>
+          <Text style={styles.textSize}>Current Menu</Text>
           {truckMenu &&
             truckMenu[0] &&
             truckMenu.map(menuItem => {
@@ -131,7 +125,7 @@ class SettingsScreen extends React.Component {
               );
             })}
         </View>
-      </ScrollView>
+      </View>
     );
   }
 }
@@ -143,20 +137,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
   },
+  addBox: {
+    borderWidth: 1,
+  },
   textSize: {
     fontWeight: 'bold',
     fontSize: 18,
+    textAlign: 'center',
+    paddingBottom: 7,
   },
   inputItem: {
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 7,
+    paddingBottom: 7,
     borderColor: 'gray',
     borderWidth: 1,
     textAlign: 'center',
   },
   inputPrice: {
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 7,
+    paddingBottom: 7,
     borderColor: 'gray',
     borderWidth: 1,
     textAlign: 'center',
@@ -180,6 +179,7 @@ const styles = StyleSheet.create({
     padding: 10,
     height: 10,
     paddingLeft: 10,
+    paddingBottom: 5,
   },
 });
 
