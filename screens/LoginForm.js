@@ -1,21 +1,21 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
   TextInput,
   TouchableOpacity,
   Text,
-  StatusBar
-} from "react-native";
-import fire from "firebase";
-require("firebase/auth");
+  StatusBar,
+} from 'react-native';
+import fire from 'firebase';
+require('firebase/auth');
 
 export default class LoginForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
-      password: ""
+      email: '',
+      password: '',
     };
     this.login = this.login.bind(this);
     this.signup = this.signup.bind(this);
@@ -26,16 +26,8 @@ export default class LoginForm extends Component {
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .catch(error => {
-        console.log(error);
+        alert(error);
       });
-
-    if (this.state.password.length < 7) {
-      alert("Password must be at least six characters long");
-    }
-
-    if (!this.state.email.includes("@") || !this.state.email.includes(".com")) {
-      alert("Please enter a valid email address");
-    }
   }
 
   signup() {
@@ -43,16 +35,8 @@ export default class LoginForm extends Component {
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .catch(error => {
-        console.log(error);
+        alert(error);
       });
-
-    if (this.state.password.length < 7) {
-      alert("Password must be at least six characters long");
-    }
-
-    if (!this.state.email.includes("@") || !this.state.email.includes(".com")) {
-      alert("Please enter a valid email address");
-    }
   }
 
   render() {
@@ -61,8 +45,8 @@ export default class LoginForm extends Component {
         <StatusBar barStyle="light-content" />
         <TextInput
           onChangeText={email => this.setState({ email })}
-          placeholder={"email"}
-          placeholderTextColor={"rgba(255, 255, 255, 0.7)"}
+          placeholder={'email'}
+          placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
           returnKeyType="next"
           onSubmitEditing={() => this.passwordInput.focus()}
           keyboardType="email-address"
@@ -72,8 +56,8 @@ export default class LoginForm extends Component {
         />
         <TextInput
           onChangeText={password => this.setState({ password })}
-          placeholder={"password"}
-          placeholderTextColor={"rgba(255, 255, 255, 0.7)"}
+          placeholder={'password'}
+          placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
           returnKeyType="go"
           secureTextEntry
           style={styles.input}
@@ -95,23 +79,23 @@ export default class LoginForm extends Component {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    marginBottom: 150
+    marginBottom: 150,
   },
   input: {
     height: 40,
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
-    color: "#FFF",
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    color: '#FFF',
     marginBottom: 10,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
   buttonContainer: {
-    backgroundColor: "#ff7675",
+    backgroundColor: '#ff7675',
     paddingVertical: 10,
-    marginBottom: 10
+    marginBottom: 10,
   },
   buttonText: {
-    textAlign: "center",
-    color: "#FFFFFF",
-    fontWeight: "700"
-  }
+    textAlign: 'center',
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
 });

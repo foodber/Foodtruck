@@ -1,22 +1,22 @@
-import React from "react";
-import { ScrollView, StyleSheet, View, Text, Button } from "react-native";
-import { connect } from "react-redux";
-import { fetchAllOrders } from "../store/Reducer";
-import { allOrders } from "../db/fire";
-import fire from "firebase";
-require("firebase/auth");
+import React from 'react';
+import { ScrollView, StyleSheet, View, Text, Button } from 'react-native';
+import { connect } from 'react-redux';
+import { fetchAllOrders } from '../store/Reducer';
+import { allOrders } from '../db/fire';
+import fire from 'firebase';
+require('firebase/auth');
 
 class LinkScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      orders: []
+      orders: [],
     };
     this.register = this.register.bind(this);
   }
 
   static navigationOptions = {
-    title: "Online Orders"
+    title: 'Incoming Orders',
   };
 
   async register() {
@@ -24,8 +24,8 @@ class LinkScreen extends React.Component {
       Expo.Permissions.NOTIFICATIONS
     );
 
-    if (status !== "granted") {
-      alert("You need enable permissions in settings");
+    if (status !== 'granted') {
+      alert('You need to enable permissions in settings');
       return;
     }
 
@@ -55,13 +55,13 @@ class LinkScreen extends React.Component {
     const orderData = orders.data();
     let newOrdersData = Object.entries(orderData);
     this.setState({
-      orders: newOrdersData
+      orders: newOrdersData,
     });
     await allOrders.doc(userId.email).onSnapshot(doc => {
       const newOrders = doc.data();
       const testing = Object.entries(newOrders);
       this.setState({
-        orders: testing
+        orders: testing,
       });
     });
   }
@@ -74,7 +74,6 @@ class LinkScreen extends React.Component {
     const truckOrders = this.state.orders || [];
     return (
       <ScrollView>
-        <Text style={styles.theHeader}>Incoming Orders: </Text>
         <View>
           {truckOrders &&
             truckOrders[0] &&
@@ -83,13 +82,14 @@ class LinkScreen extends React.Component {
               return (
                 <View key={index} style={styles.individualOrder}>
                   <Text style={styles.userName}>
-                    Ordered Person's Name : {order[0]}
+                    Ordered Person's Name : {this.state.orders.length}
                   </Text>
                   {eachOrder.map((singleOrder, index) => {
                     return (
                       <View key={index}>
-                        <Text>Ordered Item : {singleOrder[0]}</Text>
-                        <Text>Ordered Quantity : {singleOrder[1]}</Text>
+                        <Text>
+                          {singleOrder[0]} {singleOrder[1]}
+                        </Text>
                       </View>
                     );
                   })}
@@ -98,7 +98,17 @@ class LinkScreen extends React.Component {
               );
             })}
         </View>
-        <Button color={"#d63031"} title="LOGOUT" onPress={this.logout} />
+        <Button
+          color={'#d63031'}
+          title="LOGOUT"
+          onPress={this.logout}
+          style={{
+            position: 'absolute',
+            bottom: 5,
+
+            alighnSelf: 'flex-end',
+          }}
+        />
       </ScrollView>
     );
   }
@@ -108,54 +118,54 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
-    backgroundColor: "#fff"
+    backgroundColor: '#fff',
   },
   padding: {
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 5,
-    paddingRight: 7
+    paddingRight: 7,
   },
   isItWorking: {
-    fontSize: 24
+    fontSize: 24,
   },
   theHeader: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 17,
-    color: "rgba(96,100,109, 1)",
+    color: 'rgba(96,100,109, 1)',
     lineHeight: 24,
-    textAlign: "center"
+    textAlign: 'center',
   },
   ViewBox: {
     paddingLeft: 10,
-    backgroundColor: "#f5f5f5"
+    backgroundColor: '#f5f5f5',
   },
   individualOrder: {
     flex: 1,
-    backgroundColor: "#dfe6e9",
+    backgroundColor: '#dfe6e9',
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 5,
-    paddingRight: 7
+    paddingRight: 7,
   },
   userName: {
-    fontWeight: "bold",
-    fontSize: 18
+    fontWeight: 'bold',
+    fontSize: 18,
   },
   button: {
     flex: 1,
-    flexDirection: "row"
-  }
+    flexDirection: 'row',
+  },
 });
 
 const mapStateToProps = state => ({
-  allOrders: state.allOrders.allOrders
+  allOrders: state.allOrders.allOrders,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchAllOrders: () => {
     dispatch(fetchAllOrders());
-  }
+  },
 });
 
 export default connect(
