@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { fetchAllOrders } from '../store/Reducer';
 import { allOrders } from '../db/fire';
 import fire from 'firebase';
+import Swipeout from 'react-native-swipeout';
 require('firebase/auth');
 
 class LinkScreen extends React.Component {
@@ -13,11 +14,25 @@ class LinkScreen extends React.Component {
       orders: [],
     };
     this.register = this.register.bind(this);
+    this.orderFinished = this.orderFinished.bind(this);
   }
 
   static navigationOptions = {
     title: 'Incoming Orders',
   };
+
+  static swipeoutBtn = [
+    {
+      text: 'Button',
+    },
+  ];
+
+  orderFinished(userId) {
+    let newArr = this.state.orders.filter(order => order[0] !== userId);
+    this.setState({
+      orders: newArr,
+    });
+  }
 
   async register() {
     const { status } = await Expo.Permissions.askAsync(
@@ -84,16 +99,31 @@ class LinkScreen extends React.Component {
                   <Text style={styles.userName}>
                     Ordered Person's Name : {this.state.orders.length}
                   </Text>
-                  {eachOrder.map((singleOrder, index) => {
-                    return (
-                      <View key={index}>
-                        <Text>
-                          {singleOrder[0]} {singleOrder[1]}
-                        </Text>
-                      </View>
-                    );
-                  })}
-                  <Button title="DONE" onPress={this.register} />
+
+                  <Swipeout
+                    backgroundColor="transparent"
+                    autoClose={true}
+                    right={[
+                      {
+                        text: 'Delete',
+
+                        backgroundColor: 'red',
+                        onPress: () => {
+                          this.orderFinished(order[0]);
+                        },
+                      },
+                    ]}
+                  >
+                    {eachOrder.map((singleOrder, index) => {
+                      return (
+                        <View key={index}>
+                          <Text>
+                            {singleOrder[0]} {singleOrder[1]}
+                          </Text>
+                        </View>
+                      );
+                    })}
+                  </Swipeout>
                 </View>
               );
             })}
