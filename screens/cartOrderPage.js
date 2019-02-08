@@ -12,12 +12,11 @@ class LinkScreen extends React.Component {
     this.state = {
       orders: [],
     };
-    this.logOut = this.logOut.bind(this);
     this.register = this.register.bind(this);
   }
 
   static navigationOptions = {
-    title: 'Online Orders',
+    title: 'Incoming Orders',
   };
 
   async register() {
@@ -26,7 +25,7 @@ class LinkScreen extends React.Component {
     );
 
     if (status !== 'granted') {
-      alert('You need enable permissions in settings');
+      alert('You need to enable permissions in settings');
       return;
     }
 
@@ -75,7 +74,6 @@ class LinkScreen extends React.Component {
     const truckOrders = this.state.orders || [];
     return (
       <ScrollView>
-        <Text style={styles.theHeader}>Incoming Orders: </Text>
         <View>
           {truckOrders &&
             truckOrders[0] &&
@@ -84,13 +82,14 @@ class LinkScreen extends React.Component {
               return (
                 <View key={index} style={styles.individualOrder}>
                   <Text style={styles.userName}>
-                    Ordered Person's Name : {order[0]}
+                    Ordered Person's Name : {this.state.orders.length}
                   </Text>
                   {eachOrder.map((singleOrder, index) => {
                     return (
                       <View key={index}>
-                        <Text>Ordered Item : {singleOrder[0]}</Text>
-                        <Text>Ordered Quantity : {singleOrder[1]}</Text>
+                        <Text>
+                          {singleOrder[0]} {singleOrder[1]}
+                        </Text>
                       </View>
                     );
                   })}
@@ -99,7 +98,17 @@ class LinkScreen extends React.Component {
               );
             })}
         </View>
-        <Button color={'#d63031'} title="LOGOUT" onPress={this.logout} />
+        <Button
+          color={'#d63031'}
+          title="LOGOUT"
+          onPress={this.logout}
+          style={{
+            position: 'absolute',
+            bottom: 5,
+
+            alighnSelf: 'flex-end',
+          }}
+        />
       </ScrollView>
     );
   }

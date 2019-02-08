@@ -77,44 +77,54 @@ class SettingsScreen extends React.Component {
   render() {
     const truckMenu = this.state.menu || [];
     return (
-      <ScrollView>
-        <TextInput
-          placeholder="Please Enter Item Name"
-          onChangeText={text => {
-            this.setState({
-              itemName: text,
-            });
-          }}
-          value={this.state.itemName}
-        />
-        <TextInput
-          placeholder="Please Enter Item Price"
-          keyboardType="numeric"
-          value={this.state.itemPrice}
-          maxLength={7}
-          onChangeText={text => {
-            this.setState({
-              itemPrice: text,
-            });
-          }}
-        />
-        <Button
-          title="ADD ITEM TO MENU"
-          onPress={() =>
-            this.addItemToMenu(this.state.itemName, this.state.itemPrice)
-          }
-        />
+      <ScrollView contentContainerStyle={styles.container}>
+        <View>
+          <Text style={styles.textSize}>New Menu Item</Text>
+          <TextInput
+            placeholder="Item"
+            onChangeText={text => {
+              this.setState({
+                itemName: text,
+              });
+            }}
+            value={this.state.itemName}
+            style={styles.inputItem}
+          />
+          <TextInput
+            placeholder="Price"
+            keyboardType="numeric"
+            value={this.state.itemPrice}
+            maxLength={7}
+            onChangeText={text => {
+              this.setState({
+                itemPrice: text,
+              });
+            }}
+            style={styles.inputPrice}
+          />
+          <Button
+            title="ADD"
+            onPress={() =>
+              this.addItemToMenu(this.state.itemName, this.state.itemPrice)
+            }
+          />
+        </View>
         <View>
           {truckMenu &&
             truckMenu[0] &&
             truckMenu.map(menuItem => {
               return (
-                <View key={menuItem.name} style={styles.container}>
-                  <Text style={styles.Text}>Item Name : {menuItem.name}</Text>
-                  <Text style={styles.Text}>Item Price : {menuItem.price}</Text>
+                <View key={menuItem.name} style={styles.menuContainer}>
+                  <View>
+                    <Text style={styles.Text}>Item Name : {menuItem.name}</Text>
+                    <Text style={styles.Text}>
+                      Item Price : {menuItem.price}
+                    </Text>
+                  </View>
                   <Button
+                    style={{ alignItems: 'right' }}
                     color={'#d63031'}
-                    title="REMOVE ITEM FROM MENU"
+                    title="X"
                     onPress={() => this.removeItemFromMenu(menuItem.name)}
                   />
                 </View>
@@ -129,8 +139,27 @@ class SettingsScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
+    paddingTop: 5,
     backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  textSize: {
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  inputItem: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderColor: 'gray',
+    borderWidth: 1,
+    textAlign: 'center',
+  },
+  inputPrice: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderColor: 'gray',
+    borderWidth: 1,
+    textAlign: 'center',
   },
   Text: {
     fontWeight: 'bold',
@@ -138,6 +167,19 @@ const styles = StyleSheet.create({
     color: 'rgba(96,100,109, 1)',
     lineHeight: 24,
     textAlign: 'center',
+  },
+  menuContainer: {
+    flexDirection: 'row',
+    paddingBottom: 15,
+    justifyContent: 'center',
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#74b9ff',
+    padding: 10,
+    height: 10,
+    paddingLeft: 10,
   },
 });
 
