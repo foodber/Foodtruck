@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { fetchTruck } from '../store/Reducer';
 import { allTrucks } from '../db/fire';
 import fire from 'firebase';
+import Swipeout from 'react-native-swipeout';
 require('firebase/auth');
 
 class SettingsScreen extends React.Component {
@@ -108,20 +109,27 @@ class SettingsScreen extends React.Component {
             truckMenu[0] &&
             truckMenu.map(menuItem => {
               return (
-                <View key={menuItem.name} style={styles.menuContainer}>
-                  <View>
-                    <Text style={styles.Text}>Item Name : {menuItem.name}</Text>
-                    <Text style={styles.Text}>
-                      Item Price : {menuItem.price}
-                    </Text>
+                <Swipeout
+                  backgroundColor="transparent"
+                  autoClose={true}
+                  right={[
+                    {
+                      text: 'Remove',
+                      backgroundColo: 'red',
+                      onPress: () => {
+                        this.removeItemFromMenu(menuItem.name);
+                      },
+                    },
+                  ]}
+                >
+                  <View key={menuItem.name} style={styles.menuContainer}>
+                    <View>
+                      <Text style={styles.Text}>
+                        Item {menuItem.name} ${menuItem.price}
+                      </Text>
+                    </View>
                   </View>
-                  <Button
-                    style={{ alignItems: 'right' }}
-                    color={'#d63031'}
-                    title="X"
-                    onPress={() => this.removeItemFromMenu(menuItem.name)}
-                  />
-                </View>
+                </Swipeout>
               );
             })}
         </View>

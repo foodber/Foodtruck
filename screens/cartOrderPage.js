@@ -118,7 +118,7 @@ class LinkScreen extends React.Component {
                       return (
                         <View key={index}>
                           <Text>
-                            {singleOrder[0]} {singleOrder[1]}
+                            {singleOrder[0]} ${singleOrder[1]}
                           </Text>
                         </View>
                       );
